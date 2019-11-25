@@ -84,6 +84,14 @@ describe('Parent component', () => {
 
 ```
 
+## List of matchers
+
+The `expectSpy(component)` function has the following matchers available.
+
+`toHaveBeenCalled()` - passes if there was at least one instance of the component instantiated.
+`toHaveBeenCalledWithProps(props)` - passes if there was at least one instance of the component instantiated with these exact props.
+
+
 ## Contributing
 
 All contributions are welcome. Please feel free to create issues or raise PRs.
