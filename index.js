@@ -1,6 +1,4 @@
-const svelte = require('svelte/compiler');
+const { expectSpy, spyOnComponent } = require('./lib/spyFunctions.js');
 
-export function componentStub(component) {
-  const stub = eval(svelte.compile(`<div id=${component ? component.name : 'spy'} />`, { format: 'cjs' }).js.code);
-  return new stub({});
-}
+exports.expectSpy = expectSpy;
+exports.spyOnComponent = spyOnComponent;

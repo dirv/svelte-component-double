@@ -19,25 +19,52 @@
 
 # svelte-component-double
 
-A test double for Svelte 3 components. It's very light touch and does not require any complicated set up (see the example below.) It's currently in active development.
+A test double for Svelte 3 components. It's currently in active development, with support for both Mocha and Jasmine.
 
-Right now, this package contains a stub that you can use with your test framework's spy functionality (e.g. `spyOn` in Jest and Jasmine).
+The package contains a `spyOnComponent` function that you can use to stub out a child component. It also contains an `expectSpy` function that you can use to assert on how the child was called by the component under test.
 
-The plan is to then build a more specific spy with its own expectations, and with a couple of helper methods for dispatching events from the stub to the component under test.
+*There are a few things still to figure out, and help/input would be appreciated.* For example: bound props, slots, component bindings, and dispatching messages.
+
+## Installation
+
+First install the package:
+
+```bash
+npm install --save-dev svelte-component-double
+```
+
+Then you'll need to configure Node to apply this package's compiler for Svelte files. In addition to calling thte Svelte compiler, it installs a proxy so that test doubles can be attached.
+
+### Jasmine
+
+In `spec/support/jasmine.json`, add the following helper.
+
+```json
+"helpers": [
+  "../node_modules/svelte-component-double/lib/register.js"
+]
+```
+
+### Mocha
+
+In `package.json`, update the Mocha script entry to require `svelte-component-double`:
+
+```json
+"scripts": {
+  "mocha": "mocha --require svelte-test-register/lib/register.js"
+}
+```
 
 ## Usage
-
-The major point to note is that you must use a named module import for the component you wish to spy on. Doing so gives you direct access to the export so that you can then replace it a standard spy.
-
 
 In the example below, `Parent` is the component under test, and `Child` is being spied on.
 
 ```javascript
-import * as childExports from '../src/Child.svelte';
+import Child from '../src/Child.svelte';
 import Parent from '../src/Parent.svelte';
 
 import { JSDOM } from 'jsdom';
-import { componentStub } from 'svelte-component-double';
+import { spyOnComponent, expectSpy } from 'svelte-component-double';
 
 const dom = new JSDOM('<html><body></body></html>');
 global.document = dom.window.document;
@@ -46,27 +73,16 @@ global.navigator = dom.window.navigator;
 
 describe('Parent component', () => {
   it('renders a Child', () => {
-    const childSpy =
-      spyOn(childExports, 'default')
-        .and.returnValue(componentStub(childExports.default));
+    spyOnComponent(Child);
 
     const el = document.createElement('div')
     new Parent({ target: el })
 
-    expect(childSpy).toHaveBeenCalled();
+    expectSpy(Child).toHaveBeenCalled();
   });
 });
 
 ```
-
-
-## Installation
-
-```bash
-npm install --save-dev svelte-component-double
-```
-
-You'll need to ensure that your test environment can compile `.svelte` files. See [svelte-test-register](https://github.com/dirv/svelte-test-register) for one package that can do this.
 
 ## Contributing
 
