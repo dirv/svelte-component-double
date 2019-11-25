@@ -33,9 +33,10 @@ First install the package:
 npm install --save-dev svelte-component-double
 ```
 
-Then you'll need to configure Node to apply this package's compiler for Svelte files. In addition to calling thte Svelte compiler, it installs a proxy so that test doubles can be attached.
+Then you'll need to configure Node to apply this package's compiler for Svelte files. In addition to calling the Svelte compiler, it installs a proxy so that test doubles can be attached.
 
-### Jasmine
+
+### Jasmine
 
 In `spec/support/jasmine.json`, add the following helper.
 
@@ -75,8 +76,8 @@ describe('Parent component', () => {
   it('renders a Child', () => {
     spyOnComponent(Child);
 
-    const el = document.createElement('div')
-    new Parent({ target: el })
+    const el = document.createElement('div');
+    new Parent({ target: el });
 
     expectSpy(Child).toHaveBeenCalled();
   });
