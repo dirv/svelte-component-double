@@ -52,7 +52,7 @@ In `package.json`, update the Mocha script entry to require `svelte-component-do
 
 ```json
 "scripts": {
-  "mocha": "mocha --require svelte-test-register/lib/register.js"
+  "mocha": "mocha --require svelte-component-double/lib/register.js"
 }
 ```
 
