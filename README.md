@@ -19,11 +19,9 @@
 
 # svelte-component-double
 
-A test double for Svelte 3 components. It's currently in active development, with support for both Mocha and Jasmine.
+An (experimental) test double for Svelte 3 components. It's currently in active development. The package contains matchers for both Jest and Jasmine, but I’d love help to build matchers for Expect, Should and Chai.
 
-The package contains a `spyOnComponent` function that you can use to stub out a child component. It also contains an `expectSpy` function that you can use to assert on how the child was called by the component under test. There's also a `spySelector` function which returns a selector for finding rendered stubbed components within a DOM element.
-
-*There are a few things still to figure out, and help/input would be appreciated.* For example: bound props, slots, component bindings, and dispatching messages.
+*Support for two-way bindings is currently broken as of Svelte 3.16.*
 
 ## Installation
 
@@ -33,48 +31,33 @@ First install the package:
 npm install --save-dev svelte-component-double
 ```
 
-Then you'll need to configure Node to apply this package's compiler for Svelte files. In addition to calling the Svelte compiler, it installs a proxy so that test doubles can be attached.
-
-
 ### Jasmine
 
-In `spec/support/jasmine.json`, add the following helper.
+Add the following helper in `spec/support/jasmine.json`.
 
 ```json
 "helpers": [
-  "../node_modules/svelte-component-double/lib/register.js"
+  "../node_modules/svelte-component-double/lib/matchers/jasmine.js"
 ]
-```
-
-### Mocha
-
-In `package.json`, update the Mocha script entry to require `svelte-component-double`:
-
-```json
-"scripts": {
-  "mocha": "mocha --require svelte-component-double/lib/register.js"
-}
 ```
 
 ## Usage
 
+You need to use a mocking tool like [babel-plugin-rewire-exports](https://github.com/asapach/babel-plugin-rewire-exports).
+
 In the example below, `Parent` is the component under test, and `Child` is being spied on.
 
 ```javascript
-import Child from '../src/Child.svelte';
+import Child, { rewire as rewire$Child, restore } from '../src/Child.svelte';
 import Parent from '../src/Parent.svelte';
 
-import { JSDOM } from 'jsdom';
-import { spyOnComponent, expectSpy, spySelector } from 'svelte-component-double';
-
-const dom = new JSDOM('<html><body></body></html>');
-global.document = dom.window.document;
-global.window = dom.window;
-global.navigator = dom.window.navigator;
+import { componentDouble } from 'svelte-component-double';
 
 describe('Parent component', () => {
   it('renders a Child', () => {
-    spyOnComponent(Child);
+    // ensure JSDOM is set up and ready to go
+
+    rewire$Child(componentDouble(Child));
 
     const el = document.createElement('div');
     new Parent({ target: el });
@@ -90,8 +73,10 @@ describe('Parent component', () => {
 
 The `expectSpy(component)` function has the following matchers available.
 
-`toHaveBeenCalled()` - passes if there was at least one instance of the component instantiated.
-`toHaveBeenCalledWithProps(props)` - passes if there was at least one instance of the component instantiated with these exact props.
+`toBeRendered()` - passes if there was at least one instance of the component instantiated in the current document.
+`toBeRenderedIn(container)` - same but with a specific DOM container instead of `document.body`.
+`toBeRenderedWithProps(props)` - passes if there was at least one instance of the component instantiated with these exact props.
+`toBeRenderedWithPropsIn(props, container)` - same as above but with a specic DOM container instead of `document.body`.
 
 ## Identifying stubbed DOM elements
 
