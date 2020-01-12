@@ -62,7 +62,7 @@ describe('Parent component', () => {
     const el = document.createElement('div');
     new Parent({ target: el });
 
-    expectSpy(Child).toHaveBeenCalled();
+    expect(Child).toHaveBeenCalled();
     expect(el.querySelector(spySelector(Child))).not.toBeNull();
   });
 });
@@ -71,7 +71,7 @@ describe('Parent component', () => {
 
 ## List of matchers
 
-The `expectSpy(component)` function has the following matchers available.
+The `expect(component)` function has the following matchers available.
 
 `toBeRendered()` - passes if there was at least one instance of the component instantiated in the current document.
 `toBeRenderedIn(container)` - same but with a specific DOM container instead of `document.body`.
