@@ -1,6 +1,6 @@
 {
   "name": "svelte-component-double",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "description": "A test double for Svelte 3 components",
   "main": "index.js",
   "repository": {
