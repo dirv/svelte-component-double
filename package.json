@@ -1,6 +1,6 @@
 {
   "name": "svelte-component-double",
-  "version": "0.5.1",
+  "version": "0.6.0",
   "description": "A test double for Svelte 3 components",
   "main": "index.js",
   "repository": {
@@ -17,6 +17,6 @@
   },
   "homepage": "https://github.com/dirv/svelte-component-double#readme",
   "peerDependencies": {
-    "svelte": "3.x"
+    "svelte": ">= 3.16"
   }
 }
