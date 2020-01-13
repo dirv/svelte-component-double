@@ -1,4 +1,4 @@
-import expect from "expect";
+const expect = require("expect");
 
 const toBeRenderedIn = (componentDouble, container) => {
   const pass = container.querySelectorAll(componentDouble.selector()).length > 0;
