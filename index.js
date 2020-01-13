@@ -22,7 +22,9 @@ export const componentDouble = original => {
 
     updateBoundValue(component, prop, value) {
       const fnName = `${name.toLowerCase()}_${prop}_binding`;
-      component.$$.ctx[fnName](value);
+      const updateFn = component.$$.ctx.find(
+        value => (value instanceof Function) && value.name === fnName);
+      updateFn(value);
     }
   }
   TestComponent.toString = () => (

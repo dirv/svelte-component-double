@@ -21,8 +21,6 @@
 
 An (experimental) test double for Svelte 3 components. It's currently in active development. The package contains matchers for both Jest and Jasmine, but I’d love help to build matchers for Expect, Should and Chai.
 
-*Support for two-way bindings is currently broken as of Svelte 3.16.*
-
 ## Installation
 
 First install the package:
@@ -69,26 +67,65 @@ describe('Parent component', () => {
 
 ```
 
-## List of matchers
+## Matchers
 
 The `expect(component)` function has the following matchers available.
 
-`toBeRendered()` - passes if there was at least one instance of the component instantiated in the current document.
-`toBeRenderedIn(container)` - same but with a specific DOM container instead of `document.body`.
-`toBeRenderedWithProps(props)` - passes if there was at least one instance of the component instantiated with these exact props.
-`toBeRenderedWithPropsIn(props, container)` - same as above but with a specic DOM container instead of `document.body`.
+| Matcher | Description |
+| -------- | ----------- |
+| `toBeRendered()` | Passes if there was at least one instance of the component instantiated in the current document. |
+| `toBeRenderedIn(container)` | Same but with a specific DOM container instead of | `document.body`. |
+| `toBeRenderedWithProps(props)` | Passes if there was at least one instance of the component instantiated with these exact props. |
+| `toBeRenderedWithPropsIn(props, container)` | Same as above but with a specic DOM container instead of `document.body`. |
 
 ## Identifying stubbed DOM elements
 
 A spied/stubbed component will be rendered into the DOM like this:
 
 ```html
-<div class="spy-ComponentName" />
+<div class="spy-ComponentName" id="spy-ComponentName-instanceNumber" />
 ```
 
-You can use the `spySelector` function to return a selector that will match these elements. So for the example above, calling `spySelector(Child)` will return `"div[class=spy-Child]"`.
+You can use the `selector` function to return a selector that will match *all* instances of a rendered double. So for the example above, calling `spySelector(Child)` will return `"div[class=spy-Child]"`.
 
-This allows a spy to be rendered multiple times into the DOM. If you expect the child to be rendered only once, you can use the DOM `querySelector` API to return it, as shown in the example above. If you're expecting multiple instances, you can use `querySelectorAll` to return the collection of all rendered instances. You can then assert on these as normal.
+You can use the `instanceSelector(n)` to return a selector that matches a specific instance of the component.
+
+## Triggering two-way bindings
+
+If your stubbed component uses a two-way binding you can trigger that binding to update using the `updateBoundValue` function.
+
+For example, say you have the component `TagList` which can be used like this:
+
+```html
+<TagList bind:tags={tags} />
+```
+
+Then you can test how your component responds to updates to `tags` like this:
+
+```javascript
+rewire$TagList(componentDouble(TagList));
+mount(<your component that uses TagList>);
+
+TagList.firstInstance().updateBoundValue(
+  component, "tags", ["a", "b", "c"]);
+```
+
+**Warning:** `updateBoundValue` depends on the internal Svelte `$$` object which is likely to break. The current version works with 3.16+, but is incompatible with 3.15 and below.
+
+### Component property reference
+
+All of these functions are available on your component double type.
+
+**These functions were the ones that were useful to me during testing. I’m aware there’s inconsistency here, for example with `lastCall` and `firstInstance`. I would love some input on what’s the right thing to do here.**
+
+| Property/function | Type | Description |
+| ----------------- | ---- | ----------- |
+| `calls` | Array of Props | Props passed to each invocation of the double. |
+| `lastCall` | Props map | The props passed to the last invocation of the double. |
+| `selector()` | Function | Selector for _all_ instances of this double. |
+| `instanceSelector(n)` | Function | Selector for a single instances of this double. |
+| `findMatching(matchFn)` | Function | Find the call whose props match the `matchFn` predicate |
+| `firstInstance()` | Function | Returns the first instance of a component, which you an then manipulate using functions such as `updateBoundValue` (see note above). |
 
 ## Contributing
 
