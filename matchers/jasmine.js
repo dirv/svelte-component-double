@@ -1,5 +1,3 @@
-import expect from "expect";
-
 const toBeRenderedInCompare = (componentDouble, container) => {
   const pass = container.querySelectorAll(componentDouble.selector()).length > 0;
   if (pass) {
@@ -57,15 +55,20 @@ const toBeRenderedIn = () => ({
 const toBeRendered = () => ({
   compare: (componentDouble) =>
     toBeRenderedInCompare(componentDouble, global.container) });
-const toBeRenderedWithPropsIn = () => ({
-  compare: toBeRenderedWithPropsInCompares });
-const toBeRenderedWithProps = () => ({
+const toBeRenderedWithPropsIn = (utils) => ({
+  compare: (componentDouble, props, container) =>
+    toBeRenderedWithPropsInCompare(utils, componentDouble, props, container) });
+const toBeRenderedWithProps = (utils) => ({
   compare: (componentDouble, props) =>
-    toBeRenderedWithPropsInCompare(componentDouble, props, global.container) });
+    toBeRenderedWithPropsInCompare(utils, componentDouble, props, global.container) });
 
-jasmine.addMatchers({
-  toBeRenderedIn,
-  toBeRendered,
-  toBeRenderedWithPropsIn,
-  toBeRenderedWithProps
-});
+const registerDoubleMatchers = () => {
+  jasmine.addMatchers({
+    toBeRenderedIn,
+    toBeRendered,
+    toBeRenderedWithPropsIn,
+    toBeRenderedWithProps
+  });
+};
+
+exports.registerDoubleMatchers = registerDoubleMatchers;
