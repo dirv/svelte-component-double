@@ -15,10 +15,19 @@ const toBeRenderedIn = (componentDouble, container) => {
   }
 };
 
+const getNonSpyProps = instance =>
+  Object.keys(instance.$$.ctx[3]).reduce((acc, key) => {
+    if (!key.startsWith("_spy")) {
+      acc[key] = instance.$$.ctx[3][key];
+    }
+    return acc;
+  }, {});
+
 function toBeRenderedWithPropsIn(componentDouble, props, container) {
-  const allMatching = componentDouble.calls.filter(callProps => this.equals(callProps, props));
+  const allProps = componentDouble.instances.map(getNonSpyProps);
+  const allMatching = allProps.filter(callProps => this.equals(callProps, props));
   if (allMatching.length === 1) {
-    const instance = componentDouble.calls.findIndex(callProps => this.equals(callProps, props));
+    const instance = allProps.findIndex(callProps => this.equals(callProps, props));
     const pass = container.querySelector(componentDouble.instanceSelector(instance));
     if (pass) {
       return {

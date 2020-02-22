@@ -31,6 +31,7 @@ export const componentDouble = original => {
     (original instanceof Function) ? `${name} component double` : `"${name}" component double`
   );
   TestComponent.calls = calls;
+  TestComponent.instances = instances;
   TestComponent.lastCall = () => calls[calls.length - 1];
   TestComponent.selector = () => spySelector(name);
   TestComponent.instanceSelector = (instance) => instanceSelector(name, instance);
