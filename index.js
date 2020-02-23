@@ -4,7 +4,6 @@ import ComponentDouble, {
 } from "./lib/ComponentDouble.svelte";
 
 export const componentDouble = original => {
-  const calls = [];
   const instances = [];
 
   const name = original instanceof Function ? original.name : original;
@@ -14,9 +13,8 @@ export const componentDouble = original => {
       super({ ...options, props: {
         ...props,
         _spyName: name,
-        _spyInstance: calls.length
+        _spyInstance: instances.length
       }})
-      calls.push(props);
       instances.push(this);
     }
 
@@ -26,16 +24,25 @@ export const componentDouble = original => {
         value => (value instanceof Function) && value.name === fnName);
       updateFn(value);
     }
+
+    getNonSpyProps() {
+      const allProps = this.$$.ctx[3];
+      return Object.keys(allProps).reduce((acc, key) => {
+        if (!key.startsWith("_spy")) {
+          acc[key] = allProps[key];
+        }
+        return acc;
+      }, {});
+    }
   }
+
   TestComponent.toString = () => (
     (original instanceof Function) ? `${name} component double` : `"${name}" component double`
   );
-  TestComponent.calls = calls;
   TestComponent.instances = instances;
-  TestComponent.lastCall = () => calls[calls.length - 1];
   TestComponent.selector = () => spySelector(name);
   TestComponent.instanceSelector = (instance) => instanceSelector(name, instance);
-  TestComponent.findMatching = matchFn => calls.find(call => matchFn(call));
+  TestComponent.findMatching = matchFn => instances.find(instance => matchFn(instance.getNonSpyProps()));
   TestComponent.firstInstance = () => instances[0];
   return TestComponent;
 };

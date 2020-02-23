@@ -21,6 +21,8 @@
 
 An (experimental) test double for Svelte 3 components. It's currently in active development. The package contains matchers for both Jest and Jasmine, but I’d love help to build matchers for Expect, Should and Chai.
 
+**One problem:** There’s currently no way to tell between multiple instances rendered in the rendered output vs. a single instance that has been rendered multiple times due to a prop update.
+
 ## Installation
 
 First install the package:
@@ -116,12 +118,9 @@ TagList.firstInstance().updateBoundValue(
 
 All of these functions are available on your component double type.
 
-**These functions were the ones that were useful to me during testing. I’m aware there’s inconsistency here, for example with `lastCall` and `firstInstance`. I would love some input on what’s the right thing to do here.**
-
 | Property/function | Type | Description |
 | ----------------- | ---- | ----------- |
-| `calls` | Array of Props | Props passed to each invocation of the double. |
-| `lastCall` | Props map | The props passed to the last invocation of the double. |
+| `instances` | Array of instances | Each instance of the component that has been rendered. |
 | `selector()` | Function | Selector for _all_ instances of this double. |
 | `instanceSelector(n)` | Function | Selector for a single instances of this double. |
 | `findMatching(matchFn)` | Function | Find the call whose props match the `matchFn` predicate |

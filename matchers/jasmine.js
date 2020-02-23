@@ -13,16 +13,8 @@ const toBeRenderedInCompare = (componentDouble, container) => {
   }
 };
 
-const getNonSpyProps = instance =>
-  Object.keys(instance.$$.ctx[3]).reduce((acc, key) => {
-    if (!key.startsWith("_spy")) {
-      acc[key] = instance.$$.ctx[3][key];
-    }
-    return acc;
-  }, {});
-
 const toBeRenderedWithPropsInCompare = (utils, componentDouble, props, container) => {
-  const allProps = componentDouble.instances.map(getNonSpyProps);
+  const allProps = componentDouble.instances.map(i => i.getNonSpyProps());
   const allMatching = allProps.filter(callProps => utils.equals(callProps, props));
   if (allMatching.length === 1) {
     const instance = allProps.findIndex(callProps => utils.equals(callProps, props));
@@ -54,7 +46,7 @@ const toBeRenderedWithPropsInCompare = (utils, componentDouble, props, container
       message: () => `Expected ${componentDouble} to have been rendered once with props but it was not` +
         '\n\n' +
         `Expected: ${props}\n` +
-        `Received: ${componentDouble.calls.join(', ')}`  // TODO: pretty printing
+        `Received: ${allProps.join(', ')}`  // TODO: pretty printing
     }
   }
 };

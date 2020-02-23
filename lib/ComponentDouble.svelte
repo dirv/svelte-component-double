@@ -1,5 +1,4 @@
 <script>
-  //export let _spyName, _spyInstance;
   const { _spyName: name, _spyInstance: instance, otherProps } = $$props;
 </script>
 

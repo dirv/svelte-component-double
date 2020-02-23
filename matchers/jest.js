@@ -15,16 +15,8 @@ const toBeRenderedIn = (componentDouble, container) => {
   }
 };
 
-const getNonSpyProps = instance =>
-  Object.keys(instance.$$.ctx[3]).reduce((acc, key) => {
-    if (!key.startsWith("_spy")) {
-      acc[key] = instance.$$.ctx[3][key];
-    }
-    return acc;
-  }, {});
-
 function toBeRenderedWithPropsIn(componentDouble, props, container) {
-  const allProps = componentDouble.instances.map(getNonSpyProps);
+  const allProps = componentDouble.instances.map(i => i.getNonSpyProps());
   const allMatching = allProps.filter(callProps => this.equals(callProps, props));
   if (allMatching.length === 1) {
     const instance = allProps.findIndex(callProps => this.equals(callProps, props));
@@ -55,7 +47,7 @@ function toBeRenderedWithPropsIn(componentDouble, props, container) {
       message: () => `Expected ${componentDouble} to have been rendered once with props but it was not` +
         '\n\n' +
         `Expected: ${this.utils.printExpected(props)}\n` +
-        `Received: ${componentDouble.calls.map(this.utils.printReceived).join(', ')}`
+        `Received: ${allProps.map(this.utils.printReceived).join(', ')}`
     }
   }
 };
