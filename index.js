@@ -42,7 +42,8 @@ export const componentDouble = original => {
   TestComponent.instances = instances;
   TestComponent.selector = () => spySelector(name);
   TestComponent.instanceSelector = (instance) => instanceSelector(name, instance);
-  TestComponent.findMatching = matchFn => instances.find(instance => matchFn(instance.getNonSpyProps()));
+  TestComponent.findMatching = matchFn =>
+    instances.map(instance => instance.getNonSpyProps()).find(props => matchFn(props));
   TestComponent.firstInstance = () => instances[0];
   return TestComponent;
 };
