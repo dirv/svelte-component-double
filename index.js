@@ -24,16 +24,6 @@ export const componentDouble = original => {
         value => (value instanceof Function) && value.name === fnName);
       updateFn(value);
     }
-
-    getNonSpyProps() {
-      const allProps = this.$$.ctx[3];
-      return Object.keys(allProps).reduce((acc, key) => {
-        if (!key.startsWith("_spy")) {
-          acc[key] = allProps[key];
-        }
-        return acc;
-      }, {});
-    }
   }
 
   TestComponent.toString = () => (
