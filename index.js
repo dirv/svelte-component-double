@@ -45,5 +45,13 @@ export const componentDouble = original => {
   TestComponent.findMatching = matchFn =>
     instances.map(instance => instance.getNonSpyProps()).find(props => matchFn(props));
   TestComponent.firstInstance = () => instances[0];
+  TestComponent.getInstanceFromElement = (domElement) => {
+    for (let i = 0; i < instances.length; ++i) {
+      if (domElement.matches(TestComponent.instanceSelector(i))) {
+        return instances[i];
+      }
+    }
+    throw new Error(`${domElement.outerHTML} does not correspond to a ${name} component instance`);
+  }
   return TestComponent;
 };
