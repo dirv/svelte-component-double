@@ -114,7 +114,7 @@ TagList.firstInstance().updateBoundValue(
 
 **Warning:** `updateBoundValue` depends on the internal Svelte `$$` object which is likely to break. The current version works with 3.16+, but is incompatible with 3.15 and below.
 
-### Component property reference
+### Component property reference
 
 All of these functions are available on your component double type.
 
@@ -125,6 +125,7 @@ All of these functions are available on your component double type.
 | `instanceSelector(n)` | Function | Selector for a single instances of this double. |
 | `findMatching(matchFn)` | Function | Find the call whose props match the `matchFn` predicate |
 | `firstInstance()` | Function | Returns the first instance of a component, which you an then manipulate using functions such as `updateBoundValue` (see note above). |
+| `getInstanceFromElement(domElement)` | Function | Returns the component instance that rendered the given DOM element. |
 
 ## Contributing
 
