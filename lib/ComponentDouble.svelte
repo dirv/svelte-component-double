@@ -1,5 +1,14 @@
 <script>
-  const { _spyName: name, _spyInstance: instance, otherProps } = $$props;
+  const { _spyName: name, _spyInstance: instance } = $$props;
+
+  export function getNonSpyProps() {
+    return Object.keys($$props).reduce((acc, key) => {
+      if (!key.startsWith("_spy")) {
+        acc[key] = $$props[key];
+      }
+      return acc;
+    }, {});
+  }
 </script>
 
 <script context="module">
