@@ -1,5 +1,12 @@
 <script>
+  import { createEventDispatcher } from 'svelte';
+
   const { _spyName: name, _spyInstance: instance } = $$props;
+  const dispatcher = createEventDispatcher();
+
+  export function dispatch(...args) {
+    return dispatcher(...args);
+  }
 
   export function getNonSpyProps() {
     return Object.keys($$props).reduce((acc, key) => {
