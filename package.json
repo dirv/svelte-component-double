@@ -5,7 +5,10 @@
   "svelte": "index.js",
   "type": "module",
   "exports": {
-    ".": "./index.js",
+    ".": {
+      "import": "./index.js",
+      "svelte": "./index.js"
+    },
     "./vitest": "./matchers/vitest.js"
   },
   "repository": {
